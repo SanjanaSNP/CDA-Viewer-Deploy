@@ -21,7 +21,7 @@ jobs:
           tenant: ${{ secrets.tenant }}
           registry: ${{ secrets.registry }}
           repository: ${{ secrets.repository }}
-          image: cda-viewer
+          image: patient-connect
           folder: app
           branch: main
           tag: ${{ github.sha }}
