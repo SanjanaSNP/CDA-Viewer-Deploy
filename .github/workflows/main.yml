@@ -8,6 +8,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    strategy:
+      matrix:
+        image: ["cda-viewer-fe", "cda-viewer", "pdf-reactor", "notes", "patient-connect", "tenant-manager", "utils"]
+
     steps:
       - name: Checkout source code 
         uses: actions/checkout@v3
@@ -21,7 +25,7 @@ jobs:
           tenant: ${{ secrets.tenant }}
           registry: ${{ secrets.registry }}
           repository: ${{ secrets.repository }}
-          image: patient-connect
+          image: ${{ matrix.image }}
           folder: app
           branch: main
           tag: ${{ github.sha }}
@@ -36,6 +40,10 @@ jobs:
   deploy:
     needs: build
     runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        image: ["cda-viewer-fe", "cda-viewer", "pdf-reactor", "notes", "patient-connect", "tenant-manager", "utils"]
 
     steps:
       - name: Download artifacts
@@ -63,5 +71,6 @@ jobs:
 
       - name: Deploy Helm chart
         run: |
-          helm upgrade --install cda-viewer cda-viewer/ --atomic --namespace cda-viewer-ns --set image.repository=${{ secrets.registry }}.azurecr.io/${{ secrets.repository }}/patient-connect,image.tag=${{ github.sha }},changeCause=${{ github.sha }}         
-  
+          helm upgrade --install cda-viewer cda-viewer/ --atomic --namespace cda-viewer-ns \
+            --set image.repository=${{ secrets.registry }}.azurecr.io/${{ secrets.repository }}/${{ matrix.image }},image.tag=${{ github.sha }} \
+            --atomic --set changeCause=${{ github.sha }}
