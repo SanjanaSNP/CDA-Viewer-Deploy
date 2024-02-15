@@ -21,7 +21,7 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
       - name: Set default subscription
-        run: az account set --subscription ${{ secrets.subscription_id }}
+        run: az account set --subscription 4e318d48-5741-48bb-a817-99d65dc7227f
       - name: Check ACR existence
         run: |
           az acr show --name ${{ secrets.registry }}
