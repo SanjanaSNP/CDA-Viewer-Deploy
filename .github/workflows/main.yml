@@ -76,6 +76,6 @@ jobs:
 
       - name: Deploy Helm chart
         run: |
-          helm upgrade --install "${{ matrix.image }}-chart" cda-viewer/ --atomic --namespace cda-app-ns \
+          helm upgrade --install "${{ matrix.image }}-chart" cda-viewer/ --atomic --namespace cda-viewer \
             --set image.repository=${{ secrets.registry }}.azurecr.io/${{ secrets.repository }}/${{ matrix.image }},image.tag=${{ github.sha }} \
             --atomic --set changeCause=${{ github.sha }}
