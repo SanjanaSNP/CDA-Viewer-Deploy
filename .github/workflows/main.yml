@@ -29,6 +29,10 @@ jobs:
           folder: app
           branch: main
           tag: ${{ github.sha }}
+      - name: Check ACR existence
+        run: |
+          az login --service-principal -u ${{ secrets.service_principal }} -p ${{ secrets.service_principal_password }} --tenant ${{ secrets.tenant }}
+          az acr show --name ${{ secrets.registry }} --subscription ${{ secrets.subscription_id }}
       - name: Upload artifacts
         uses: actions/upload-artifact@v2
         with:
