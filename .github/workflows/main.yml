@@ -6,12 +6,8 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        image: ["cda-viewer-fe", "cda-viewer", "pdf-reactor", "notes", "patient-connect", "tenant-manager", "utils"]
-
+    runs-on: self-hosted  
+    
     steps:
       - name: Checkout source code 
         uses: actions/checkout@v3
@@ -29,7 +25,7 @@ jobs:
           tenant: ${{ secrets.tenant }}
           registry: ${{ secrets.registry }}
           repository: ${{ secrets.repository }}
-          image: ${{ matrix.image }}
+          image: "cda-viewer"  # Choose the specific image you want to build
           folder: app
           branch: main
           tag: ${{ github.sha }}
@@ -44,11 +40,7 @@ jobs:
 
   deploy:
     needs: build
-    runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        image: ["cda-viewer-fe", "cda-viewer", "pdf-reactor", "notes", "patient-connect", "tenant-manager", "utils"]
+    runs-on: self-hosted  
 
     steps:
       - name: Download artifacts
@@ -76,6 +68,6 @@ jobs:
 
       - name: Deploy Helm chart
         run: |
-          helm upgrade --install "${{ matrix.image }}-chart" cda-viewer/ --atomic --namespace cda-viewer \
-            --set image.repository=${{ secrets.registry }}.azurecr.io/${{ secrets.repository }}/${{ matrix.image }},image.tag=${{ github.sha }} \
+          helm upgrade --install "cda-viewer-chart" cda-viewer/ --atomic --namespace cda-viewer \
+            --set image.repository=${{ secrets.registry }}.azurecr.io/${{ secrets.repository }}/cda-viewer,image.tag=${{ github.sha }} \
             --atomic --set changeCause=${{ github.sha }}
