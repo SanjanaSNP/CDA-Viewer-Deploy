@@ -16,19 +16,13 @@ jobs:
         uses: azure/login@v1.4.3
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
-      - name: ACR build
-        id: build-push-acr
+      - name: Docker build and push
         uses: docker/build-push-action@v2
         with:
-          service_principal: ${{ secrets.service_principal }}
-          service_principal_password: ${{ secrets.service_principal_password }}
-          tenant: ${{ secrets.tenant }}
-          registry: ${{ secrets.registry }}
-          repository: ${{ secrets.repository }}
-          image: "cda-viewer"  # Choose the specific image you want to build
-          folder: app
-          branch: main
-          tag: ${{ github.sha }}
+          context: .
+          file: ./app/Dockerfile
+          push: true
+          tags: ${{ secrets.registry }}.azurecr.io/${{ secrets.repository }}/cda-viewer:${{ github.sha }}
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v2
