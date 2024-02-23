@@ -10,7 +10,7 @@ jobs:
     runs-on: self-hosted
     strategy:
       matrix:
-        os: [windows-2019]
+        os: [linux]
         architecture: [x64]
     
     steps:
@@ -42,37 +42,37 @@ jobs:
           name: built-artifacts
           path: cda-viewer
 
-  deploy:
-    needs: build
-    runs-on: self-hosted
+  # deploy:
+  #   needs: build
+  #   runs-on: self-hosted
 
-    steps:
-      - name: Download artifacts
-        uses: actions/download-artifact@v2
-        with:
-          name: built-artifacts
+  #   steps:
+  #     - name: Download artifacts
+  #       uses: actions/download-artifact@v2
+  #       with:
+  #         name: built-artifacts
 
-      - name: Azure login
-        uses: azure/login@v1.4.3
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
+  #     - name: Azure login
+  #       uses: azure/login@v1.4.3
+  #       with:
+  #         creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: Set AKS context
-        id: set-context
-        uses: azure/aks-set-context@v3
-        with:
-          resource-group: '${{ secrets.resource_group }}' 
-          cluster-name: '${{ secrets.cluster_name }}'
+  #     - name: Set AKS context
+  #       id: set-context
+  #       uses: azure/aks-set-context@v3
+  #       with:
+  #         resource-group: '${{ secrets.resource_group }}' 
+  #         cluster-name: '${{ secrets.cluster_name }}'
 
-      - name: Helm tool installer
-        uses: Azure/setup-helm@v3
-        with:
-          version: 3.6.0
+  #     - name: Helm tool installer
+  #       uses: Azure/setup-helm@v3
+  #       with:
+  #         version: 3.6.0
 
-      - name: Deploy Helm chart
-        run: |
-          helm upgrade --install cda-viewer cda-viewer/ --atomic --namespace cda-viewer-ns `
-          --set image.repository=${{ secrets.registry }}.azurecr.io/${{ secrets.repository }}/cda-viewer,image.tag=${{ github.sha }} `
-          --atomic --set changeCause=${{ github.sha }}
+  #     - name: Deploy Helm chart
+  #       run: |
+  #         helm upgrade --install cda-viewer cda-viewer/ --atomic --namespace cda-viewer-ns `
+  #         --set image.repository=${{ secrets.registry }}.azurecr.io/${{ secrets.repository }}/cda-viewer,image.tag=${{ github.sha }} `
+  #         --atomic --set changeCause=${{ github.sha }}
 
 
