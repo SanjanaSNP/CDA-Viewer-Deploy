@@ -64,10 +64,10 @@ jobs:
           resource-group: '${{ secrets.resource_group }}' 
           cluster-name: '${{ secrets.cluster_name }}'
 
-      - name: Helm tool installer
-        uses: Azure/setup-helm@v3
-        with:
-          version: 3.6.0
+      # - name: Helm tool installer
+      #   uses: Azure/setup-helm@v3
+      #   with:
+      #     version: 3.6.0
 
       - name: Deploy Helm chart
         run: |
