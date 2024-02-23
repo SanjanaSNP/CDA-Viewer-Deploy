@@ -21,18 +21,24 @@ jobs:
         uses: azure/login@v1.4.3
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
-      - name: Docker login
-        uses: docker/login-action@v1
-        with:
-          registry: https://${{ secrets.registry }}.azurecr.io
-          username: ${{ secrets.service_principal }}
-          password: ${{ secrets.service_principal_password }}
-
+      # - name: Docker login
+      #   uses: docker/login-action@v1
+      #   with:
+      #     registry: https://${{ secrets.registry }}.azurecr.io
+      #     username: ${{ secrets.service_principal }}
+      #     password: ${{ secrets.service_principal_password }}
 
       - name: Docker build and push
         run: |
           docker build -t ${{ secrets.registry }}.azurecr.io/${{ secrets.repository }}/cda-viewer:${{ github.sha }} -f ./app/Dockerfile ./app
           docker push ${{ secrets.registry }}.azurecr.io/${{ secrets.repository }}/cda-viewer:${{ github.sha }}
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: built-artifacts
+          path: |
+            app
+            cda-viewer
 
   deploy:
     needs: build
