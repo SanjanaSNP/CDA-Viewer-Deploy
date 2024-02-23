@@ -21,26 +21,26 @@ jobs:
         uses: azure/login@v1.4.3
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
-
-      - name: Docker login
-        uses: docker/login-action@v1
-        with:
-          registry: https://${{ secrets.registry }}.azurecr.io
-          username: ${{ secrets.service_principal }}
-          password: ${{ secrets.service_principal_password }}
-
-      - name: Docker build and push
-        run: |
-          docker build -t ${{ secrets.registry }}.azurecr.io/${{ secrets.repository }}/cda-viewer:${{ github.sha }} -f ./app/Dockerfile ./app
-          docker push ${{ secrets.registry }}.azurecr.io/${{ secrets.repository }}/cda-viewer:${{ github.sha }}
           
+      - name: ACR build
+        id: build-push-acr
+        uses: azure/acr-build@v1
+        with:
+          service_principal: ${{ secrets.service_principal }}
+          service_principal_password: ${{ secrets.service_principal_password }}
+          tenant: ${{ secrets.tenant }}
+          registry: ${{ secrets.registry }}
+          repository: ${{ secrets.repository }}
+          image: ${{ matrix.image }}
+          folder: app
+          branch: main
+          tag: ${{ github.sha }}
+         
       - name: Upload artifacts
         uses: actions/upload-artifact@v2
         with:
           name: built-artifacts
-          path: |
-            app
-            cda-viewer
+          path: cda-viewer
 
   deploy:
     needs: build
@@ -58,16 +58,16 @@ jobs:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: Set AKS context
+        id: set-context
         uses: azure/aks-set-context@v3
         with:
-          resource-group: '${{ secrets.resource_group }}'
+          resource-group: '${{ secrets.resource_group }}' 
           cluster-name: '${{ secrets.cluster_name }}'
 
-      - name: Set up Helm
-        run: |
-          echo "Helm version: $(helm version --short)"
-          echo "Helm home: $HOME\.helm"
-          echo "Helm path: $(where.exe helm)"
+      - name: Helm tool installer
+        uses: Azure/setup-helm@v3
+        with:
+          version: 3.6.0
 
       - name: Deploy Helm chart
         run: |
