@@ -81,7 +81,8 @@ jobs:
 
       - name: Deploy Helm chart
         run: |
-          helm upgrade --install cda-viewer cda-viewer/ --atomic --namespace cda-app-ns \
-            --set image.repository=${{ secrets.registry }}.azurecr.io/${{ secrets.repository }}/cda-viewer ,image.tag=${{ github.sha }} \
-            --atomic --set changeCause=${{ github.sha }}
+          helm upgrade --install cda-viewer cda-viewer/ --atomic --namespace cda-app-ns `
+          --set image.repository=${{ secrets.registry }}.azurecr.io/${{ secrets.repository }}/cda-viewer,image.tag=${{ github.sha }} `
+          --atomic --set changeCause=${{ github.sha }}
+
 
