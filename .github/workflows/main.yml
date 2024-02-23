@@ -7,11 +7,11 @@ on:
 
 jobs:
   build:
-    runs-on: self-hosted
-    strategy:
-      matrix:
-        os: [Linux]
-        architecture: [x64]
+    runs-on: [self-hosted, linux, x64, vm]
+    # strategy:
+    #   matrix:
+    #     os: [Linux]
+    #     architecture: [x64]
     
     steps:
       - name: Checkout source code 
