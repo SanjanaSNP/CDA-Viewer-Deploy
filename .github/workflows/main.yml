@@ -31,7 +31,7 @@ jobs:
           tenant: ${{ secrets.tenant }}
           registry: ${{ secrets.registry }}
           repository: ${{ secrets.repository }}
-          image: ${{ matrix.image }}
+          image: patient-connect
           folder: app
           branch: main
           tag: ${{ github.sha }}
@@ -72,7 +72,7 @@ jobs:
   #     - name: Deploy Helm chart
   #       run: |
   #         helm upgrade --install cda-viewer cda-viewer/ --atomic --namespace cda-viewer-ns `
-  #         --set image.repository=${{ secrets.registry }}.azurecr.io/${{ secrets.repository }}/cda-viewer,image.tag=${{ github.sha }} `
+  #         --set image.repository=${{ secrets.registry }}.azurecr.io/${{ secrets.repository }}/patient-connect,image.tag=${{ github.sha }} `
   #         --atomic --set changeCause=${{ github.sha }}
 
 
