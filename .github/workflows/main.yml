@@ -21,24 +21,26 @@ jobs:
         uses: azure/login@v1.4.3
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
-
+          
       - name: ACR build
         id: build-push-acr
         uses: azure/acr-build@v1
         with:
-          image: ${{ secrets.registry }}.azurecr.io/${{ secrets.repository }}/cda-viewer:${{ github.sha }}
-          context: ./app
-          dockerfile: ./app/Dockerfile
-          repository-name: ${{ secrets.repository }}
-          repository-tag: ${{ github.sha }}
-          build-args: ""
-
+          service_principal: ${{ secrets.service_principal }}
+          service_principal_password: ${{ secrets.service_principal_password }}
+          tenant: ${{ secrets.tenant }}
+          registry: ${{ secrets.registry }}
+          repository: ${{ secrets.repository }}
+          image: ${{ matrix.image }}
+          folder: app
+          branch: main
+          tag: ${{ github.sha }}
+         
       - name: Upload artifacts
         uses: actions/upload-artifact@v2
         with:
           name: built-artifacts
           path: cda-viewer
-
 
   # deploy:
   #   needs: build
