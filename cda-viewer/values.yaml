@@ -26,4 +26,4 @@ service:
   type: ClusterIP
   port: 80
 
-changeCause: CDA-viewer
+changeCause: cda-viewer
