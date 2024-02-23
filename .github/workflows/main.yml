@@ -64,9 +64,17 @@ jobs:
           cluster-name: '${{ secrets.cluster_name }}'
 
       - name: Helm tool installer
+        id: helm
         uses: Azure/setup-helm@v3
         with:
           version: 3.6.0
+
+      - name: Set up Helm
+        run: |
+          echo "Helm version: ${{ steps.helm.outputs.helm-version }}"
+          echo "Helm home: ${{ steps.helm.outputs.helm-home }}"
+          echo "Helm path: ${{ steps.helm.outputs.helm-path }}"
+
 
       - name: Deploy Helm chart
         run: |
