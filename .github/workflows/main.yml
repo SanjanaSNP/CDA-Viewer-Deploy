@@ -52,10 +52,10 @@ jobs:
         with:
           name: built-artifacts
 
-      - name: Azure login
-        uses: azure/login@v1.4.3
-        with:
-          creds: ${{ secrets.AZURE_CREDENTIALS }}
+      # - name: Azure login
+      #   uses: azure/login@v1.4.3
+      #   with:
+      #     creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: Set AKS context
         id: set-context
