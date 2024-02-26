@@ -75,7 +75,8 @@ jobs:
       #     --set image.repository=${{ secrets.registry }}.azurecr.io/${{ secrets.repository }}/patient-connect,image.tag=${{ github.sha }} \
       #     --atomic --set changeCause=${{ github.sha }}
       - name: Deploy Helm chart
-        run: helm upgrade --install cda-viewer cda-viewer/ --atomic --namespace cda-test-ns --set "image.repository=${{ secrets.registry }}.azurecr.io/${{ secrets.repository }}/patient-connect,image.tag=${{ github.sha }}" --atomic --set "changeCause=${{ github.sha }}"
+        run: helm upgrade --install cda-viewer cda-viewer/ --atomic --namespace cda-test-ns --set "image.repository=${{ secrets.registry }}.azurecr.io/${{ secrets.repository }}/patient-connect,image.tag=${{ github.sha }}" --set "changeCause=${{ github.sha }}"
+
 
 
 
